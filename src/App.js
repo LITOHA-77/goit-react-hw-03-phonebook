@@ -5,11 +5,27 @@ import Filter from './components/Filter/Filter';
 import ContactList from './components/ContactList/ContactList';
 import dataBaseContacts from './data/contacts.json';
 import css from './components/Filter/Filter.module.css';
+
 class App extends Component {
   state = {
     contacts: dataBaseContacts,
     filter: '',
   };
+
+  componentDidMount() {
+    const dataContacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(dataContacts);
+
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   deleteContact = contactId => {
     this.setState(prewState => ({
